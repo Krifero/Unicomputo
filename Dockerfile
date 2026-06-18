@@ -21,12 +21,12 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copiamos los archivos de la aplicación
 COPY . /var/www/html
 
-# Ajustamos permisos
+# Ajustamos permisos para que el servidor pueda escribir sesiones y caché
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 WORKDIR /var/www/html
 
-# Instalamos dependencias
-RUN composer install --no-dev --optimize-autoloader
+# Instalamos dependencias sin scripts para evitar errores de conexión a DB durante el build
+RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 EXPOSE 80
